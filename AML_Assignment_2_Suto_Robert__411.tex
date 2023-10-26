@@ -1,0 +1,166 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[skip=5pt plus1pt, indent=15pt]{parskip}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{unicode-math}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{bbold}
+\usepackage{appendix}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[export]{adjustbox}[2011/08/13]
+\usepackage{url}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[shortlabels]{enumitem}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\usepackage{graphicx}
+\usepackage{etoolbox,refcount}
+\usepackage{multicol}
+
+\newcounter{countitems}
+\newcounter{nextitemizecount}
+\newcommand{\setupcountitems}{%
+  \stepcounter{nextitemizecount}%
+  \setcounter{countitems}{0}%
+  \preto\item{\stepcounter{countitems}}%
+}
+\makeatletter
+\newcommand{\computecountitems}{%
+  \edef\@currentlabel{\number\c@countitems}%
+  \label{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\newcommand{\nextitemizecount}{%
+  \getrefnumber{countitems@\number\c@nextitemizecount}%
+}
+\newcommand{\previtemizecount}{%
+  \getrefnumber{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\makeatother    
+\newenvironment{AutoMultiColItemize}{%
+\ifnumcomp{\nextitemizecount}{>}{3}{\begin{multicols}{2}}{}%
+\setupcountitems\begin{itemize}}%
+{\end{itemize}%
+\unskip\computecountitems\ifnumcomp{\previtemizecount}{>}{3}{\end{multicols}}{}}
+
+
+\title{AML Assignment 2}
+\author{Suto Robert-Lucian (411)}
+\date{}
+
+\begin{document}
+
+\maketitle
+\begin{large}
+
+\section{Exercise 1.}
+Consider $\mathcal{H}$ the following hypothesis class :
+$$
+\mathcal{H}=\left\{h_a: \mathbb{R} \rightarrow\{0,1\} \mid a>0, a \in \mathbb{R}, \text { where } h_a(x)=\mathbf{1}_{[-a, a]}(x)=\left\{\begin{array}{ll}
+1, & x \in[-a, a] \\
+0, & x \notin[-a, a]
+\end{array}\right\}\right.
+$$
+\subsection{a. Compute the growth function $\tau_H(m)$ (also known as shatter coefficient) for $m \geq 0$ for hypothesis class $\mathcal{H}$}
+
+From a first look, we can see that our hypothesis class, has a similar form to $\mathcal{H}_{thresholds}$, thus we can have a look at Lecture 8.
+\\
+
+Consider $\mathrm{C}=\left\{\mathrm{c}_1, \mathrm{c}_2, \ldots, \mathrm{c}_{\mathrm{m}}\right\}$ a set of $\mathrm{m}$ points, with $\mathrm{c}_{\mathrm{i}}<\mathrm{c}_{\mathrm{j}}$. \\
+$\mathcal{H}_C$ can have at most $\mathrm{m}+1$ different functions: take $\mathrm{a}_1<\mathrm{c}_1<\mathrm{a}_2<\mathrm{c}_2<\ldots<\mathrm{a}_{\mathrm{m}}$ $<\mathrm{c}_{\mathrm{m}}<\mathrm{a}_{\mathrm{m}+1}$, than we will have $\left|\mathcal{H}_C\right|=\left\{\mathrm{h}_{\mathrm{a}_{-} 1}, \mathrm{~h}_{\mathrm{a}_2 2}, \ldots, \mathrm{h}_{\mathrm{a}_{-} \mathrm{m}+1}\right\}=\mathrm{m}+1$ as\\
+$\mathrm{h}_{\mathrm{a} \_1}$ labels points $\mathrm{c}_1, \mathrm{c}_2, \ldots, \mathrm{c}_{\mathrm{m}}$ with labels $(0,0,0, \ldots, 0,0)$\\
+$\mathrm{h}_{\mathrm{a} \_2}$ labels points $\mathrm{c}_1, \mathrm{c}_2, \ldots, \mathrm{c}_{\mathrm{m}}$ with labels $(1,0,0, \ldots, 0,0)$\\
+$\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots
+\ldots\ldots\ldots\ldots\ldots\ldots\ldots$\\
+$\mathrm{h}_{\mathrm{a} \_3}$ label points $\mathrm{c}_1, \mathrm{c}_2, \ldots, \mathrm{c}_{\mathrm{m}}$ with labels $(1,1,0, \ldots, 0,0)$\\
+$\mathrm{h}_{\mathrm{a} \_\mathrm{m}}$ label points $\mathrm{c}_1, \mathrm{c}_2, \ldots, \mathrm{c}_{\mathrm{m}}$ with labels $(1,1,1, \ldots, 1,0)$\\
+$\mathrm{h}_{\mathrm{a} \_\mathrm{m}+1}$ label points $\mathrm{c}_1, \mathrm{c}_2, \ldots, \mathrm{c}_{\mathrm{m}}$ with labels $(1,1,1, \ldots, 1,1)$
+\\
+
+Which concludes that:
+$$
+\tau_H(m)=\max _{C \subseteq X: C \mid=m}\left|H_C\right| = m+1
+$$
+
+
+\subsection{b. Compare your result from the previous point with the general upper bound given by the Sauer lemma. Are they equal or different?}
+In order to compute the upper bound, given by the Sauer lemma, we need to calculate the VCdim($\mathcal{H}$). We can simply prove that the VCdim($\mathcal{H}$) = 1.
+
+Consider $x_1,x_2$, two points. While placing them inside our hypothesis class, we can observe that we have three possible cases:
+\begin{itemize}
+    \item One, where $|x_1| < |x_2|$, where the label (0,1) cannot be achieved;
+    \item Second one, where $|x_1| = |x_2|$. The problem is the labels (1,0) and (0,1) cannot be achieved;
+    \item And the last one, $|x_1| > |x_2|$, where the label (1,0) cannot be achieved;
+\end{itemize}
+Because two points cannot be shattered, we can safely say that VCdim($\mathcal{H}$) = 1.
+
+According to Sauer's lemma, the upper bound is given by the following inequality:
+$$
+\tau_{\mathcal{H}}(m) \leq \sum_{i=0}^d C_m^d
+$$
+where $d$ is given by VCdim($\mathcal{H}$), and is known to be 1. Thus, the upper bound, given by the lemma is:
+$$
+\sum_{i=0}^d C_m^i=C_m^0+C_m^1=1+m
+$$
+which is equal to what we computed at subpoint a.
+\newpage
+
+\section{Exercise 2.}
+Consider de concept class $C_a$ formed by the union of two closed intervals $[a, a+1] \cup[a+2, a+4]$, where $a \in \mathbb{R}$. Give an efficient ERM algorithm for learning the concept class $C_a$ and compute its complexity for each of the following cases:
+\subsection{a. realizable case.}
+\subsection{b. agnostic case.}
+
+
+\section{Exercise 3.}
+Consider a modified version of the AdaBoost algorithm that runs for exactlythree rounds as follows:
+\begin{itemize}
+\item the first two rounds run exactly as in AdaBoost (at round 1 we obtain distribution $\mathbf{D}^{(1)}$, weak classifier $h_1$ with error $c_1$; at round 2 we obtain distribution $\mathbf{D}^{(2)}$, weak classifier $h_2$ with error $\left.c_2\right)$
+\item in the third round we compute for each $i=1,2, \ldots, m$ :
+$$
+\mathbf{D}^{(3)}(i)= \begin{cases}\frac{D^{(1)}(i)}{Z}, & \text { if } h_1\left(x_i\right) \neq h_2\left(x_i\right) \\ 0, & \text { otherwise }\end{cases}
+$$
+where $\mathrm{Z}$ is a normalization factor such that $\mathbf{D}^{(3)}$ is a probability distribution.
+\item obtain weak classifier $h_3$ with error $\epsilon_3$.
+\item output the final classifier $h_{f i n a l}
+(x)=\operatorname{sign}\left(h_1(x)+h_2(x)+h_3(x)\right)$.
+\end{itemize}
+Assume that at each round $t=1,2,3$ the weak learner returns a weak classifier $h_t$ for which the error $c_t$ satisfies $c_t \leq \frac{1}{2}-\gamma_t, \gamma_t>0$.
+\\
+\subsection{a) What is the probability that the classifier $h_1$ will be selected again at round 2 ? Justify your answer.}
+
+\subsection{b) Consider $\gamma=\min \left\{\gamma_1, \gamma_2, \gamma_3\right\}$. Show that the training error of the final classifier $h_{\text {final }}$ is at most $\frac{1}{2}-\frac{3}{2} \gamma+2 \gamma^3$ and show that this is strictly smaller than $\frac{1}{2}-\gamma \cdot$}
+$$
+\begin{aligned}
+& \frac{1}{2}-\frac{3}{2} \gamma_{\min }+2 \gamma_{\min }^3<\frac{1}{2}-\gamma_{\min } \implies \\
+& -\frac{1}{2} + \gamma_{\min } + \frac{1}{2}-\frac{3}{2} \gamma_{\min }+2 \gamma_{\min }^3<0 \implies \\
+& -\frac{3}{2}  \gamma_{\min }+2  \gamma_{\min }^3+\gamma_{\min }<0 \implies \\
+& \frac{3}{2}  \gamma_{\min }-2  \gamma_{\min }^3-\gamma_{\min }>0 \implies \\
+& \frac{1}{2}  \gamma_{\min }-2  \gamma_{\min }^3>0 \implies \\
+& \gamma_{\min }\left(\frac{1}{2} -2 \gamma_{\min }^2\right)>0 \implies  \\
+& \frac{1}{2} -2 \gamma_{\min }^2>0 \implies  \\
+& 2 \gamma_{\min }^2 < \frac{1}{2} \implies  \\
+& \gamma_{\min }^2 < \frac{1}{4} \implies  \\
+& \gamma_{\min } < \frac{1}{2} \\
+\end{aligned}
+$$
+
+
+
+From the assumption made in the request (the weak learner returns a weak classifier $h_t$ for which the error $c_t$ satisfies $c_t \leq \frac{1}{2}-\gamma_t, \gamma_t>0$), we can affirm that $\gamma_{\min } < \frac{1}{2}$ is true, hence,  is correct.
+
+
+\end{large}
+\end{document}

@@ -1,0 +1,444 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[skip=5pt plus1pt, indent=15pt]{parskip}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{unicode-math}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{bbold}
+\usepackage{appendix}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[export]{adjustbox}[2011/08/13]
+\usepackage{url}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{subcaption}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\usepackage{graphicx}
+\usepackage{etoolbox,refcount}
+\usepackage{multicol}
+
+\newcounter{countitems}
+\newcounter{nextitemizecount}
+\newcommand{\setupcountitems}{%
+  \stepcounter{nextitemizecount}%
+  \setcounter{countitems}{0}%
+  \preto\item{\stepcounter{countitems}}%
+}
+\makeatletter
+\newcommand{\computecountitems}{%
+  \edef\@currentlabel{\number\c@countitems}%
+  \label{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\newcommand{\nextitemizecount}{%
+  \getrefnumber{countitems@\number\c@nextitemizecount}%
+}
+\newcommand{\previtemizecount}{%
+  \getrefnumber{countitems@\number\numexpr\value{nextitemizecount}-1\relax}%
+}
+\makeatother    
+\newenvironment{AutoMultiColItemize}{%
+\ifnumcomp{\nextitemizecount}{>}{3}{\begin{multicols}{2}}{}%
+\setupcountitems\begin{itemize}}%
+{\end{itemize}%
+\unskip\computecountitems\ifnumcomp{\previtemizecount}{>}{3}{\end{multicols}}{}}
+
+
+\title{AML Assignment 1}
+\author{Suto Robert-Lucian (411)}
+\date{}
+
+\begin{document}
+
+\maketitle
+\begin{large}
+
+\section{Exercise 1.}
+\subsection{a) a finite hypothesis class H with VCdim(H) = 2023.}
+According to the third Seminar, page 3 to 6, the class of Boolean conjunctions over the variables $x_1, x_2, \dots, x_d, d \geq 2$
+$$
+\begin{aligned}
+& \mathcal{H}_{\text {con }}^d=\left\{h:\{0,1\}^d \rightarrow\{0,1\}, h\left(x_1, x_2, \ldots, x_d\right)=\bigwedge_{i=\overline{1, d}} l\left(x_i\right)\right\} \\
+& l\left(x_i\right)=\text { literal of variable } x_i \\
+& l\left(x_i\right) \in\left\{x_i, \overline{x_i}, \underset{\text { missing }}{1}\right\}
+\end{aligned}
+$$
+Has the VC dimension equal to $d$. This is proven in exercises 3.3 where we showed that 
+$$
+h_{\mathcal{J}}=\bigwedge_{j \notin \mathcal{J}} \overline{x_j}=\bigwedge_{j \in\{1, \ldots, d\} \backslash \mathcal{J}} \overline{x_j}
+$$
+Can shatter $\mathcal{J}=\{1,2,4\}$, define $h_{\mathcal{J}}=\overline{x_3} \wedge \overline{x_5} \wedge \overline{x_6} \quad(d=6)$.
+$$
+\begin{aligned}
+& h_{\mathcal{J}}\left(e_1\right)=h_{\mathcal{J}}(1,0,0,0,0,0)=\overline{0} \wedge \overline{0} \wedge \overline{0}=1 \\
+& h_{\mathcal{J}}\left(e_2\right)=h_{\mathcal{J}}(0,1,0,0,0,0)=\overline{0} \wedge \overline{0} \wedge \overline{0}=1 \\
+& h_{\mathcal{J}}\left(e_4\right)=h_{\mathcal{J}}(0,0,0,1,0,0)=\overline{0} \wedge \overline{0} \wedge \overline{0}=1 \\
+& h_{\mathcal{J}}\left(e_3\right)=h_{\mathcal{J}}(0,0,1,0,0,0)=\overline{1} \wedge \overline{0} \wedge \overline{0}=0 \\
+& h_{\mathcal{J}}\left(e_5\right)=h_{\mathcal{J}}(0,0,0,0,1,0)=\overline{0} \wedge \overline{1} \wedge \overline{0}=0 \\
+& h_{\mathcal{J}}\left(e_6\right)=h_{\mathcal{J}}(0,0,0,0,0,1)=\overline{0} \wedge \overline{0} \wedge \overline{1}=0
+\end{aligned}
+$$
+So, $\quad h_{\mathcal{J}}\left(e_j\right)=1$ if $j \in \mathcal{J}$ and $h_{\mathcal{J}}\left(e_j\right)=0$ if $j \notin \mathcal{J}$.
+This proves that $\mathcal{H}_{\text {con }}^d$ shatters $C \Rightarrow V C \operatorname{dim}\left(\mathcal{H}_{\text {con }}^d\right) \geq d$.
+The other implication (That  $V C \operatorname{dim}\left(\mathcal{H}_{\text {con }}^d\right) \leq d$), is proven in 3.4 by contradiction.
+
+This class is also finite because it includes all possible boolean conjunctions over $d$ variables, with the total number of possible conjunctions being finite. If $d$ is known and equal to 2023,  we can conclude that the VC dimension of $\mathcal{H}_{\text {con }}^{2023}=2023$.
+
+
+
+
+\subsection{b) an infinite hypothesis class H with VCdim(H) = 2023.}
+According to Lecture 7, page 21 to 28, the  linear classifiers that go through origin, noted as  $
+\left(\mathcal{H} S_0{ }^{\mathrm{n}}\right)
+$
+$$
+\mathcal{H} S_0{ }^{\mathrm{n}}=\left\{h_{\mathrm{w}, 0}: \mathbb{R}^{\mathrm{n}} \rightarrow\{-1,1\}, h_{w, 0}(x)=\operatorname{sign}\left(\sum_{i=1}^n w_i x_i\right) \mid \mathrm{w} \in \mathbb{R}^{\mathrm{n}}\right\}
+v$$has the VCdim of n and is also infinite, $w$ being able to take any real value. For this particular case, we can consider that $$
+\operatorname{VCdim}\left(\mathcal{H} S_0{ }^{2023}\right) = 2023
+$$
+
+
+\subsection{c) an infinite hypothesis class H with VCdim(H) = $\infty$.}
+According to Lecture 7, page 10 to 20, the set of sin functions
+$$
+\mathcal{H}_{\mathrm{sin}}=\left\{\mathrm{h}_\theta: \mathbf{R} \rightarrow\{0,1\} \mid \mathrm{h}_\theta(\mathrm{x})=\lceil\sin (\theta x)\rceil, \theta \in \mathrm{R}\right\}, \quad\lceil-1\rceil=0
+$$
+has the VCdim equal to $\infty$ and is also infinite.
+
+
+
+\section{Exercise 2.}
+Consider $\mathcal{H}$ to be the following hypothesis class:
+$$
+\mathcal{H}=\left\{h_a: \mathbb{R}^3 \rightarrow\{0,1\} \mid h_a(\mathbf{x})=\mathbf{1}_{\left[\|x\|_2 \leq a\right]}(\mathbf{x}), \mathbf{x}=\left(x_1, x_2, x_3\right) \in \mathbb{R}^3,\|x\|_2=\sqrt{x_1^2+x_2^2+x_3^2}\right\}
+$$
+Consider the realizability assumption.
+\subsection{a) show that $\mathcal{H}$ can be $(\epsilon, \delta)$-PAC learned by giving an algorithm $\mathrm{A}$ and determining the sample complexity $m_{\mathcal{H}}(\epsilon, \delta)$ such that the definition of PAC learnability is satisfied. }
+We can rewrite all $h_a$ in $\mathcal{H}$ as follows:
+$$
+h_a(\mathbf{x})= \begin{cases}1 & \text { if }\|\mathbf{x}\|_2 \leq a \\ 0 & \text { if }\|\mathbf{x}\|_2>a\end{cases}
+$$
+Since $\|x\|_2=\sqrt{x_1^2+x_2^2+x_3^2}$ denotes a type of Euclidean norm the condition $\|x\|_2 \leq a$ is equivalent to $|\mathbf{x}| \leq a$ and that the condition $\|x\|_2 > a$ is equivalent to $|\mathbf{x}| > a$.v
+Therefore, we can rewrite $h_a$ as:
+$$
+h_a(\mathbf{x})= \begin{cases}1 & \text { if }|\mathbf{x}| \leq a \\ 0 & \text { if }|\mathbf{x}|>a\end{cases}
+$$
+This is a standard form of a threshold function: $h_a(\mathbf{x})$ is $1$ if the input $|\mathbf{x}|$ is less than or equal to the threshold $a$, and $0$ otherwise.
+From knowing the realizability assumption, let $a^* \in \mathbf{R}$ such that $
+h_{\mathrm{a}^*}$ labels all points correctly
+. Considering that $\mathcal{H}$ is a family of threshold functions we can refer to the ERM algorithm presented in Lecture 5.
+\begin{itemize}
+    \item Given a training set $S=\{(x_1,,y_1),(x_2,y_2),…,(x_m,y_m)\}$ of m labeled examples, where $x_i$ $\in \mathbb{R}^3$ and $y_i \in \{0,1\}$ for all $i \in [m]$. (Also apply the norm over all of the examples)
+    \item take $b = \max \{\mathrm{x}_{\mathrm{i}} \mid(\mathrm{x}_{\mathrm{i}}, 1)$ (if no positive example appears in S, take b = $-\infty$)
+    \item output $A(S = h_s = h_b)$
+\end{itemize}
+Knowing the that $\mathcal{H}$ belongs to the $\mathcal{H}_{thresholds}$ family, we can assume that $\mathcal{H}$ can be $(\epsilon, \delta)$-PAC learned using the ERM learning rule with a sample complexity of $m=\left\lceil\frac{1}{\varepsilon} \log \frac{1}{\delta}\right\rceil$ (Lecture 5 page 30)
+
+
+
+
+
+
+\subsection{b) compute VCdim($\mathcal{H}$).}
+Considering that $\mathcal{H}$ belongs to the family of $\mathcal{H}_{thresholds}$, we can use the proof from Lecture 6 to support that VCdim($\mathcal{H}) \leq \mathcal{H}_{lines}  =$  1. To show that the VCdim($\mathcal{H}$) $\geq 1$, We can simply take a set consisted of one point in $\mathbb{R}^3$ for example $p=(0,1,1)$. To obtain label 0, we can chose $a = 0$, and for label 1, we can chose $a = 2$. Thus VCdim($\mathcal{H}$) $\geq 1$, making it equal to 1.
+
+
+
+\section{Exercise 3.}
+Compute $\operatorname{VCdim}(\mathcal{H})$ where $\mathcal{H}$ is the following hypothesis class:
+$$
+\mathcal{H}=\left\{h_{\theta_1, \theta_2}: \mathbb{R}^2 \rightarrow\{0,1\} \mid h_{\theta_1, \theta_2}(\mathbf{x})=h_{\theta_1, \theta_2}\left(x_1, x_2\right)=\mathbf{1}_{\left[\theta_1+x_1 \cdot \sin \left(\theta_2\right)+x_2 \cdot \cos \left(\theta_2\right)>0\right]}, \theta_1, \theta_2 \in \mathbb{R}, \mathbf{x} \in \mathbb{R}^2\right\}
+$$
+
+Comparing $h_{\theta_1, \theta_2}$ with the function from $\mathcal{H}_{lines}$ (Lecture 6, page 28-29) $$\mathcal{H}_{lines}=\left\{h_{a, b, c}: \mathbb{R}^2 \rightarrow\{0,1\} \mid h_{a, b, c}(\mathbf{x})=\mathbf{1}_{[a x+b y+c>0]}, a, b, c \in \mathbb{R}, \mathbf{x} \in \mathbb{R}^2\right\}$$we can see that $h_{\theta_1, \theta_2}$ can be represented in the form of $h_{a,b,c}$.
+
+Knowing that both sine and cosine are both bounded to [-1,1], we can rewrite $\cos(\theta_2) $ as $a$, $\sin(\theta_2) $ as $ b$, and $\theta_1 $ as $ c $. Now, we can rewrite $\mathcal{H}$ as follows:
+$$\mathcal{H}=\left\{h_{a, b, c}: \mathbb{R}^2 \rightarrow\{0,1\} \mid h_{a, b, c}(\mathbf{x})=\mathbf{1}_{[a x+b y+c>0]}, a, b, c \in \mathbb{R}, \mathbf{x} \in \mathbb{R}^2\right\}$$
+where $a,b \in [-1,1] \text{ and } c \in \mathbb{R}$. \\ Let's have a look at the initial equation of $\mathcal{H}_{lines}$. To achieve similar bounding of $a,b \in [-1,1]$ that is present in $\mathcal{H}$, we could normalize the entire equation by dividing the entire equation with euclidean norm of $a$ and $b$, thus, achieving the same values present in  $\mathcal{H}$. ($a,b \in [-1,1] \text{ and } c \in \mathbb{R}$). Because of the normalization, the direction of the line would not be affected, meaning that we can still recreate every line in $\mathbb{R}^2$. From this rendition, we can observe that $\mathcal{H}$ is included in the family of $\mathcal{H}_{lines}$, implying that VCdim($\mathcal{H}$) $\leq$  VCdim($\mathcal{H}_{lines}$), which is proven in Lecture 6 to be 3.\\ 
+We can now verify that $h_{\theta_1 \theta_2}$ can shatter a set of three points in order to determine that the VCdim is $\geq 3$.
+We can chose $C = \{(-2, 1), (1, -4), (2, 3)\}$
+
+\begin{enumerate}
+\item
+\begin{AutoMultiColItemize}
+\item If $\theta_1$ = -2, $\theta_2$ = -2 $\rightarrow$ (0, 0, 0)
+\item If $\theta_1$ = -2, $\theta_2$ = -1.5 $\rightarrow$ (1, 0, 0)
+\item If $\theta_1$ = -2, $\theta_2$ = -0.3 $\rightarrow$ (0, 0, 1)
+\item If $\theta_1$ = -2, $\theta_2$ = 1.9 $\rightarrow$ (0, 1, 0)
+\item If $\theta_1$ = -1.6, $\theta_2$ = -0.5 $\rightarrow$ (1, 0, 1)
+\item If $\theta_1$ = -1.5, $\theta_2$ = 1.7 $\rightarrow$ (0, 1, 1)
+\item If $\theta_1$ = -0.7, $\theta_2$ = -2 $\rightarrow$ (1, 1, 0)
+\item If $\theta_1$ = 1.4, $\theta_2$ = 1 $\rightarrow$ (1, 1, 1)
+\end{AutoMultiColItemize}
+\end{enumerate}
+
+
+\section{Exercise 4.}
+Consider $\mathcal{H}_\alpha$ to be the class of axis aligned rectangles with fixed aspect-ratio $\alpha$, where $\alpha \in \mathbb{R}$ and $\alpha>0$ :
+$$
+\mathcal{H}_\alpha=\left\{h_{a, b, c, d}: \mathbb{R}^2 \rightarrow\{0,1\} \mid h_{a, b, c, d}(\mathbf{x})=\mathbf{1}_{[a, b] \times[c, d]}(\mathbf{x}), a, b, c, d \in \mathbb{R}, a<b, c<d, \frac{d-c}{b-a}=\alpha\right\}
+$$
+Consider the realizability assumption.
+\subsection{a) give a learning algorithm $\mathrm{A}$ that returns a hypothesis $h_S$ from $\mathcal{H}_\alpha, h_S=A(S)$ consistent with the training set $\mathrm{S}$ ( $h_S$ has empirical risk 0 on $\left.\mathrm{S}\right)$.}
+
+For completing this request, we can have a look in the first seminar and think of a similar approach, by chosing the thightest and the biggest rectagle as following:
+Consider the following algorithm $A$, that takes as input the training set $S$ and outputs $h_S = h_{\left(a_{S}, b_{S }, c_{S}, d_{S}\right)}$, where
+$$
+\begin{aligned}
+& a_{S}=\min _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 1} \quad c_{S}=\min _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 2} \\
+& b_{S}=\max _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 1} \quad d_{S}=\max _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 2} \\
+&
+\end{aligned}
+$$
+
+
+\begin{itemize}
+    \item 
+    If all yi = 0, then all points xi have label 0, so there is no positive example. In this case, choosez = (z1, z2) a point that is not in the training set S and take $a_S = b_S = z_1, c_S = d_S = z_2$. (Seminar 1)
+    \item We can now chose, $h_S=h_{\left(a_S, b_{S}, c_{S}, d_{S}\right)}=\mathbb{1}_{\left[a_{S}, b_{S}\right] \times\left[c_{S}, d_{S}\right]}$ as the indicator function of the tightest rectangle $R_S=\left[a_{S}, b_{S}\right] \times\left[c_{S}, d_{S}\right]$ enclosing all positive examples.
+\end{itemize}
+For the biggest rectangle, we inverse the points mentioned above as following:
+$$
+\begin{aligned}
+& a_{S}'=\max _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 1} \quad c_{S}'=\max _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 2} \\
+& b_{S}'=\min _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 1} \quad d_{S}'=\min _{\substack{i=\overline{1, m} \\
+y_i=1}} x_{i 2} \\
+&
+\end{aligned}
+$$
+If no valid point $x_{i}$ labeled 0 that satisfies the condition of the boundary is found, then we simply set $a_S = a_m$. The same thing goes for the rest of the points, resulting in a new indicator function $h_S'=h_{\left(a_S', b_{S}', c_{S}', d_{S}'\right)}=\mathbb{1}_{\left[a_{S}', b_{S}'\right] \times\left[c_{S}', d_{S}'\right]}$
+
+
+\subsection{b) find the sample complexity $m_{\mathcal{H}_\alpha}(\epsilon, \delta)$ in order to show that $\mathcal{H}_\alpha$ is PAC - learnable.}
+
+
+\section{Exercise 5.}
+Compute $\operatorname{VCdim}(\mathcal{H})$ where $\mathcal{H}$ is the following hypothesis class:
+$$
+\mathcal{H}=\left\{h_\theta: \mathbb{R} \rightarrow\{0,1\} \mid h_\theta(x)=\mathbf{1}_{[\theta, \theta+1] \cup[\theta+2, \theta+4] \cup[\theta+6, \theta+9]}(x), \theta \in \mathbb{R}\right\}
+$$
+
+From the beginning, we can conclude that the maximum dimension that $\mathcal{H}$ can have is 6. Taking a set of 7 elements would make it impossible for the label (1,0,1,0,1,0,1) to appear. Now we can look at the smaller dimensions. Also, considering that we have 3 intervals, it's safe to assume that the VC dimension of $\mathcal{H}$ is greater or equal to 2.
+
+For the dimension of 3, we can continue with another simple set $\mathcal{C} = \{1,2,3\}$, alongside the theta values of:
+\begin{itemize}
+    \item $\theta = 1000$ to achieve (0,0,0)
+     \item $\theta = 3$ to achieve (0,0,1)
+      \item $\theta = 1.5$ to achieve (0,1,0)
+      \item $\theta = -8$ to achieve (1,0,0)
+      \item $\theta = -7$ to achieve (1,1,0)
+      \item $\theta = 2$ to achieve (0,1,1)
+      \item $\theta = -3$ to achieve (1,0,1)
+      \item $\theta = -5$ to achieve (1,1,1)
+\end{itemize}
+
+Thus, $\mathcal{C}$ can be shattered, resulting in $\text{VCdim}(\mathcal{H})\geq3$.
+We can also find a set of 4 points that can be shattered by $h_{\theta}$. Consider $\mathcal{C}=\{1,2,6.5,8.5\}$.\newpage
+% For $\theta = 1000  $ we achieve the labeling (0,0,0,0), which is trivial.\\\\
+% For $\theta = 5  $ we achieve the labeling (0,0,0,1)
+% \begin{equation}
+% \begin{aligned}1 \not\in [ 5 , 6 ] \cup [ 7 , 9 ] \cup [  11 , 14 ]\\
+% 1.5 \not\in [ 5 , 6 ] \cup [ 7 , 9 ] \cup [  11 , 14 ]\\
+% 3 \not\in [ 5 , 6 ] \cup [ 7 , 9 ] \cup [  11 , 14 ]\\
+% 5.5 \in [ 5 , 6 ] \cup [ 7 , 9 ] \cup [  11 , 14 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -4  $ we achieve the labeling (0,0,1,0)
+% \begin{equation}
+% \begin{aligned}
+% 1 \not\in [ -4 , -3 ] \cup [ -2 , 0 ] \cup [  2 , 5 ]\\
+% 1.5 \not\in [ -4 , -3 ] \cup [ -2 , 0 ] \cup [  2 , 5 ]\\
+% 3 \in [ -4 , -3 ] \cup [ -2 , 0 ] \cup [  2 , 5 ]\\
+% 5.5 \not\in [ -4 , -3 ] \cup [ -2 , 0 ] \cup [  2 , 5 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = 2.5  $ we achieve the labeling (0,0,1,1)
+% \begin{equation}
+% \begin{aligned}
+% 1 \not\in [ 2.5 , 3.5 ] \cup [ 4.5 , 6.5 ] \cup [  8.5 , 11.5 ]\\
+% 1.5 \not\in [ 2.5 , 3.5 ] \cup [ 4.5 , 6.5 ] \cup [  8.5 , 11.5 ]\\
+% 3 \in [ 2.5 , 3.5 ] \cup [ 4.5 , 6.5 ] \cup [  8.5 , 11.5 ]\\
+% 5.5 \in [ 2.5 , 3.5 ] \cup [ 4.5 , 6.5 ] \cup [  8.5 , 11.5 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = 1.1  $ we achieve the labeling (0,1,0,0)
+% \begin{equation}
+% \begin{aligned}
+% 1 \not\in [ 1.1 , 2.1 ] \cup [ 3.1 , 5.1 ] \cup [  7.1 , 10.1 ]\\
+% 1.5 \in [ 1.1 , 2.1 ] \cup [ 3.1 , 5.1 ] \cup [  7.1 , 10.1 ]\\
+% 3 \not\in [ 1.1 , 2.1 ] \cup [ 3.1 , 5.1 ] \cup [  7.1 , 10.1 ]\\
+% 5.5 \not\in [ 1.1 , 2.1 ] \cup [ 3.1 , 5.1 ] \cup [  7.1 , 10.1 ]\\
+% \end{aligned}
+% \end{equation}
+
+% For $\theta = 1.5  $ we achieve the labeling (0,1,0,1)
+% \begin{equation}
+% \begin{aligned}
+% 1 \not\in [ 1.5 , 2.5 ] \cup [ 3.5 , 5.5 ] \cup [  7.5 , 10.5 ]\\
+% 1.5 \in [ 1.5 , 2.5 ] \cup [ 3.5 , 5.5 ] \cup [  7.5 , 10.5 ]\\
+% 3 \not\in [ 1.5 , 2.5 ] \cup [ 3.5 , 5.5 ] \cup [  7.5 , 10.5 ]\\
+% 5.5 \in [ 1.5 , 2.5 ] \cup [ 3.5 , 5.5 ] \cup [  7.5 , 10.5 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -4.5  $ we achieve the labeling (0,1,1,0)
+% \begin{equation}
+% \begin{aligned}
+% 1 \not\in [ -4.5 , -3.5 ] \cup [ -2.5 , -0.5 ] \cup [  1.5 , 4.5 ]\\
+% 1.5 \in [ -4.5 , -3.5 ] \cup [ -2.5 , -0.5 ] \cup [  1.5 , 4.5 ]\\
+% 3 \in [ -4.5 , -3.5 ] \cup [ -2.5 , -0.5 ] \cup [  1.5 , 4.5 ]\\
+% 5.5 \not\in [ -4.5 , -3.5 ] \cup [ -2.5 , -0.5 ] \cup [  1.5 , 4.5 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -0.5  $ we achieve the labeling (0,1,1,1)
+% \begin{equation}
+% \begin{aligned}1 \not\in [ -0.5 , 0.5 ] \cup [ 1.5 , 3.5 ] \cup [  5.5 , 8.5 ]\\
+% 1.5 \in [ -0.5 , 0.5 ] \cup [ 1.5 , 3.5 ] \cup [  5.5 , 8.5 ]\\
+% 3 \in [ -0.5 , 0.5 ] \cup [ 1.5 , 3.5 ] \cup [  5.5 , 8.5 ]\\
+% 5.5 \in [ -0.5 , 0.5 ] \cup [ 1.5 , 3.5 ] \cup [  5.5 , 8.5 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -8  $ we achieve the labeling (1,0,0,0)
+% \begin{equation}
+% \begin{aligned}
+% 1 \in [ -8 , -7 ] \cup [ -6 , -4 ] \cup [  -2 , 1 ]\\
+% 1.5 \not\in [ -8 , -7 ] \cup [ -6 , -4 ] \cup [  -2 , 1 ]\\
+% 3 \not\in [ -8 , -7 ] \cup [ -6 , -4 ] \cup [  -2 , 1 ]\\
+% 5.5 \not\in [ -8 , -7 ] \cup [ -6 , -4 ] \cup [  -2 , 1 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -2.6  $ we achieve the labeling (1,0,0,1)
+% \begin{equation}
+% \begin{aligned}
+% 1 \in [ -2.6 , -1.6 ] \cup [ -0.6 , 1.4 ] \cup [  3.4 , 6.4 ]\\
+% 1.5 \not\in [ -2.6 , -1.6 ] \cup [ -0.6 , 1.4 ] \cup [  3.4 , 6.4 ]\\
+% 3 \not\in [ -2.6 , -1.6 ] \cup [ -0.6 , 1.4 ] \cup [  3.4 , 6.4 ]\\
+% 5.5 \in [ -2.6 , -1.6 ] \cup [ -0.6 , 1.4 ] \cup [  3.4 , 6.4 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = 0.1  $ we achieve the labeling (1,0,1,0)
+% \begin{equation}
+% \begin{aligned}
+% 1 \in [ 0.1 , 1.1 ] \cup [ 2.1 , 4.1 ] \cup [  6.1 , 9.1 ]\\
+% 1.5 \not\in [ 0.1 , 1.1 ] \cup [ 2.1 , 4.1 ] \cup [  6.1 , 9.1 ]\\
+% 3 \in [ 0.1 , 1.1 ] \cup [ 2.1 , 4.1 ] \cup [  6.1 , 9.1 ]\\
+% 5.5 \not\in [ 0.1 , 1.1 ] \cup [ 2.1 , 4.1 ] \cup [  6.1 , 9.1 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -3  $ we achieve the labeling (1,0,1,1)
+% \begin{equation}
+% \begin{aligned}
+% 1 \in [ -3 , -2 ] \cup [ -1 , 1 ] \cup [  3 , 6 ]\\
+% 1.5 \not\in [ -3 , -2 ] \cup [ -1 , 1 ] \cup [  3 , 6 ]\\
+% 3 \in [ -3 , -2 ] \cup [ -1 , 1 ] \cup [  3 , 6 ]\\
+% 5.5 \in [ -3 , -2 ] \cup [ -1 , 1 ] \cup [  3 , 6 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -7  $ we achieve the labeling (1,1,0,0)\begin{equation}
+% \begin{aligned}
+% 1 \in [ -7 , -6 ] \cup [ -5 , -3 ] \cup [  -1 , 2 ]\\
+% 1.5 \in [ -7 , -6 ] \cup [ -5 , -3 ] \cup [  -1 , 2 ]\\
+% 3 \not\in [ -7 , -6 ] \cup [ -5 , -3 ] \cup [  -1 , 2 ]\\
+% 5.5 \not\in [ -7 , -6 ] \cup [ -5 , -3 ] \cup [  -1 , 2 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -2.1  $ we achieve the labeling (1,1,0,1)
+% \begin{equation}
+% \begin{aligned}
+% 1 \in [ -2.1 , -1.1 ] \cup [ -0.1 , 1.9 ] \cup [  3.9 , 6.9 ]\\
+% 1.5 \in [ -2.1 , -1.1 ] \cup [ -0.1 , 1.9 ] \cup [  3.9 , 6.9 ]\\
+% 3 \not\in [ -2.1 , -1.1 ] \cup [ -0.1 , 1.9 ] \cup [  3.9 , 6.9 ]\\
+% 5.5 \in [ -2.1 , -1.1 ] \cup [ -0.1 , 1.9 ] \cup [  3.9 , 6.9 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = 0.5  $ we achieve the labeling (1,1,1,0)
+% \begin{equation}
+% \begin{aligned}
+% 1 \in [ 0.5 , 1.5 ] \cup [ 2.5 , 4.5 ] \cup [  6.5 , 9.5 ]\\
+% 1.5 \in [ 0.5 , 1.5 ] \cup [ 2.5 , 4.5 ] \cup [  6.5 , 9.5 ]\\
+% 3 \in [ 0.5 , 1.5 ] \cup [ 2.5 , 4.5 ] \cup [  6.5 , 9.5 ]\\
+% 5.5 \not\in [ 0.5 , 1.5 ] \cup [ 2.5 , 4.5 ] \cup [  6.5 , 9.5 ]\\
+% \end{aligned}
+% \end{equation}
+% For $\theta = -1  $ we achieve the labeling (1,1,1,1)
+% \begin{equation}
+% \begin{aligned}1 \in [ -1 , 0 ] \cup [ 1 , 3 ] \cup [  5 , 8 ]\\
+% 1.5 \in [ -1 , 0 ] \cup [ 1 , 3 ] \cup [  5 , 8 ]\\
+% 3 \in [ -1 , 0 ] \cup [ 1 , 3 ] \cup [  5 , 8 ]\\
+% 5.5 \in [ -1 , 0 ] \cup [ 1 , 3 ] \cup [  5 , 8 ]\\
+% \end{aligned}
+% \end{equation}
+% Thus, we can consider that  $\mathcal{C}$ is shatterable, resulting in $\text{VCdim}(\mathcal{H})\geq4$.\newpage
+
+
+\begin{enumerate}
+\item
+\begin{AutoMultiColItemize}
+\item If $\theta$ = -5.0 $\rightarrow$ (1, 1, 0, 0)
+\item If $\theta$ = -4.9 $\rightarrow$ (0, 1, 0, 0)
+\item If $\theta$ = -3.9 $\rightarrow$ (0, 0, 0, 0)
+\item If $\theta$ = -3.0 $\rightarrow$ (1, 0, 0, 0)
+\item If $\theta$ = -2.5 $\rightarrow$ (1, 0, 1, 0)
+\item If $\theta$ = -2.0 $\rightarrow$ (1, 1, 1, 0)
+\item If $\theta$ = -0.9 $\rightarrow$ (0, 1, 1, 0)
+\item If $\theta$ = -0.5 $\rightarrow$ (0, 1, 1, 1)
+\item If $\theta$ = -0.0 $\rightarrow$ (1, 1, 1, 1)
+\item If $\theta$ = 0.1 $\rightarrow$ (1, 0, 1, 1)
+\item If $\theta$ = 0.6 $\rightarrow$ (1, 0, 0, 1)
+\item If $\theta$ = 1.0 $\rightarrow$ (1, 1, 0, 1)
+\item If $\theta$ = 1.1 $\rightarrow$ (0, 1, 0, 1)
+\item If $\theta$ = 2.1 $\rightarrow$ (0, 0, 0, 1)
+\item If $\theta$ = 2.5 $\rightarrow$ (0, 0, 1, 1)
+\item If $\theta$ = 2.6 $\rightarrow$ (0, 0, 1, 0)
+\end{AutoMultiColItemize}
+\end{enumerate}
+Thus, we can consider that  $\mathcal{C}$ is shatterable, resulting in $\text{VCdim}(\mathcal{H})\geq4$.
+
+Now, finding 32 values for $\theta$ and 5 different values for $x$ that would fit this general case, seems a little bit impossible. Let's see if we can prove that the VCdim of $\mathcal{H}$ is lower than 5.
+
+Consider the general case $a < b < c < d < e$, and the subset 1 0 1 0 1. We want to place a in the first interval, b in none, c in the second interval, d in none, and e in the third interval. This ordering is based on the order of real numbers.
+
+If we take a to be in [$\theta$, $\theta$ + 1], b not in this interval, and c in [$\theta$ + 2, $\theta$ + 4], then the distance (a, b) must be strictly greater than 1. This is because the distance of 1 is between $\theta$ + 1 and $\theta$ + 2. The same argument applies to the intervals [$\theta$ + 4, $\theta$ + 6] for c and e. Therefore, the distance from c to e is greater than 2, which is the minimum distance needed to have a gap between $\theta$ + 4 and $\theta$ + 6. Thus, the distance from a to e is strictly greater than 3.
+
+We also note that the intervals have lengths 1, 2, and 3. Therefore, it is not possible to obtain all numbers in the same interval. This leads to a contradiction, which implies that the subset 1 1 1 1 1 cannot be obtained.
+
+For the subset 1 0 1 0 0, we should have:
+\begin{itemize}
+    \item a in [$\theta$, $\theta$ + 1], b in none, c in [$\theta$ + 2, $\theta$ + 4], d and e in none
+    \item a in [$\theta$ + 2, $\theta$ + 4], b in none, c in [$\theta$ + 6, $\theta$ + 9]
+\end{itemize}
+
+
+To achieve the first situation, the distance from a to c must be at most 4, which is the extreme case where a is the left endpoint of the first interval and c is the right endpoint of the second interval. To achieve the second situation, the distance from a to c must be at most 7 (($\theta$ + 9) - ($\theta$ + 2)). Thus, taking the less restrictive situation, we obtain that dist(a, c) <= 7.
+
+The idea is that at this rate, we should either arrive at a contradiction or a "recipe" that tells us exactly how to construct the set that is a good example.
+
+We can also consider the symmetric case 0 0 1 0 1, which gives:
+\begin{itemize}
+    \item c in [$\theta$, $\theta$ + 1], d in none, e in [$\theta$ + 2, $\theta$ + 4], a and b in none
+    \item c in [$\theta$ + 2, $\theta$ + 4], d in none, e in [$\theta$ + 6, $\theta$ + 9], a and b in none
+\end{itemize}
+
+
+From here, we can obtain dist(c, e) is at most 4 and at most 7, respectively, which implies that the total distance is at most 7.
+
+\end{large}
+\end{document}
